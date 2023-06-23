@@ -11,8 +11,45 @@ const productSchema = new mongoose.Schema({
   },
   image: {
     type: String,
-    required: true
+    required: false
+  },
+  descr: {
+    type: String,
+    required: false
+  },
+  season: {
+    type: String,
+    required: false
+  },
+  fit: {
+    type: String,
+    required: false
+  },
+  gender: {
+    type: String,
+    required: false
+  },
+  fabric: {
+    type: String,
+    required: false
+  },
+  style: {
+    type: String,
+    required: false
+  },
+  specifications: {
+    type: String,
+    required: false
+  },
+  available:{
+    type: Boolean,
+    required: false
+  },
+  size: {
+    type: Array,
+    required: false
   }
-});
+
+},{timestamps: true});
 
 module.exports = mongoose.model('Product', productSchema);
