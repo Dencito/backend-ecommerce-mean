@@ -48,6 +48,10 @@ const productSchema = new mongoose.Schema({
   size: {
     type: Array,
     required: false
+  },
+  stock: {
+    type: Number,
+    required: false
   }
 
 },{timestamps: true});

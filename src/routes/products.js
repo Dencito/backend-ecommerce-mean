@@ -1,24 +1,50 @@
-const express = require('express');
+const express = require("express");
+const Multer = require("multer");
+const { products } = require("../controllers/controllers");
 const router = express.Router();
-const Product = require('../models/Product');
-const admin = require('firebase-admin');
-const Multer = require('multer');
-
-const serviceAccount = require('./serviceAccountKey.json');
-admin.initializeApp({
-  credential: admin.credential.cert(serviceAccount),
-  storageBucket: 'ecommerce-ifts11.appspot.com'
-});
-const bucket = admin.storage().bucket();
 
 const upload = Multer({
-  storage: Multer.memoryStorage(),
+  storage: Multer.diskStorage({}),
   limits: {
-    fileSize: 5 * 1024 * 1024
-  }
+    fileSize: 5 * 1024 * 1024,
+  },
 });
 
-router.post('/', upload.single('image'), (req, res) => {
+router.post("/", upload.single("image"), products.createProduct);
+router.get("/", products.getProducts);
+router.get("/:id", products.getProductId);
+router.delete("/:id", products.deleteProductId);
+router.put("/:id", products.editProductId);
+
+/* router.post('/', upload.single('image'), async (req, res) => {
+  const file = req.file;
+
+  if (!file) {
+    return res.status(400).json({ error: 'No se ha seleccionado ningún archivo' });
+  }
+
+  console.log(file)
+
+  try {
+    const result = await cloudinary.uploader.upload(file.path);
+    console.log(result)
+
+    // La URL de la imagen se encuentra en result.secure_url
+    const imageUrl = result.secure_url;
+
+    const { name, price, descr, season, fit, gender, fabric, style, specifications, avaliable, stock } = req.body;
+    const size = JSON.parse(req.body.size)
+    await Product.create({ name, price, descr, season, fit, gender, fabric, style, specifications, avaliable, size, stock, image: imageUrl });
+    const product = await Product.findById(product._id);
+
+    res.status(201).json({ message: 'Product created successfully', data: product });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Failed to create product' });
+  }
+}); */
+
+/* router.post('/', upload.single('image'), (req, res) => {
   const file = req.file;
 
   if (!file) {
@@ -41,11 +67,14 @@ router.post('/', upload.single('image'), (req, res) => {
   });
 
   stream.on('finish', async () => {
-    const url = `https://storage.googleapis.com/${bucket.name}/${fileUpload.name}`;
+    //const url = `https://storage.googleapis.com/${bucket.name}/${fileUpload.name}`;
+    const url = `https://storage.googleapis.com/${bucket.name}/${filename}`;
+    //console.log("https://firebasestorage.googleapis.com/v0/b/"+bucket.name+  "/o/images%"+ fileUpload.name.split("/")[1]+"?alt=media&token=9bbe9e9b-5c71-4d33-bcf6-c4b3d35a5d26")
+    
     try {
-      const { name, price, descr, season, fit, gender, fabric, style, specifications, avaliable } = req.body;
+      const { name, price, descr, season, fit, gender, fabric, style, specifications, avaliable, stock } = req.body;
       const size = JSON.parse(req.body.size)
-      const product = await Product.create({ name, price, descr, season, fit, gender, fabric, style, specifications, avaliable, size });
+      const product = await Product.create({ name, price, descr, season, fit, gender, fabric, style, specifications, avaliable, size, stock });
       await Product.findByIdAndUpdate(product._id, { image: url });
       const prodId = await Product.findById(product._id);
       res.status(201).json({ message: 'Product created successfully', data: prodId });
@@ -55,10 +84,7 @@ router.post('/', upload.single('image'), (req, res) => {
   });
 
   stream.end(file.buffer);
-});
-
-
-
+}); */
 
 /* const multer = require('multer');
 // Configurar el almacenamiento de multer
@@ -92,54 +118,5 @@ router.get('/images/:filename', (req, res) => {
     res.sendFile(imagePath);
   });
  */
-router.get('/', async (req, res) => {
-  try {
-    const products = await Product.find();
-    res.json(products);
-  } catch (error) {
-    res.status(500).json({ message: 'Failed to retrieve products' });
-  }
-});
-router.get('/:id', async (req, res) => {
-  try {
-    const productId = req.params.id;
-    const product = await Product.findById(productId);
-    if (!product) {
-      return res.status(404).json({ message: 'Product not found' });
-    }
-    res.json({ message: 'Product found successfully', data: product });
-  } catch (error) {
-    res.status(500).json({ message: 'Failed to retrieve product' });
-  }
-});
-
-router.delete('/:id', async (req, res) => {
-  try {
-    const productId = req.params.id;
-    const product = await Product.findByIdAndRemove(productId);
-    if (!product) {
-      return res.status(404).json({ message: 'Product not found' });
-    }
-    res.json({ message: 'Product remove successfully' });
-  } catch (error) {
-    res.status(500).json({ message: 'Failed to retrieve product' });
-  }
-});
-
-router.put('/:id', async (req, res) => {
-  try {
-    const productUpdate = await req.body
-    const productId = req.params.id;
-    const product = await Product.findByIdAndUpdate(productId, productUpdate);
-    if (!product) {
-      return res.status(404).json({ message: 'Product not found' });
-    }
-    res.json({ message: 'Product updated successfully', data: productUpdate });
-  } catch (error) {
-    res.status(500).json({ message: 'Failed to retrieve product' });
-  }
-});
-
-
 
 module.exports = router;
