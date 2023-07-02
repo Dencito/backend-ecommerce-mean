@@ -17,7 +17,15 @@ const productSchema = new mongoose.Schema({
     type: String,
     required: false
   },
-  season: {
+  category: {
+    type: String,
+    required: false
+  },
+  state: {
+    type: Number,
+    required: false
+  },
+  /* season: {
     type: String,
     required: false
   },
@@ -44,9 +52,9 @@ const productSchema = new mongoose.Schema({
   available:{
     type: Boolean,
     required: false
-  },
+  }, */
   size: {
-    type: Array,
+    type: String,
     required: false
   },
   stock: {

@@ -25,33 +25,45 @@ const createProduct = async (req, res) => {
       name,
       price,
       descr,
-      season,
+      size,
+      category,
+      state,
+      /* season,
       fit,
       gender,
       fabric,
       style,
       specifications,
-      avaliable,
+      avaliable, */
       stock,
-      userId
+      userId,
     } = req.body;
     /* const size = JSON.parse(req.body.size); */
+
+   /*  Descripcion;
+    Categoria;
+    Talle;
+    Estado;
+    Precio; */
 
     const product = await Product.create({
       name,
       price,
       descr,
-      season,
+      category,
+      state,
+      /* season,
       fit,
       gender,
       fabric,
       style,
       specifications,
       avaliable,
-      /* size, */
+      size, */
+      size,
       stock,
       image: imageUrl,
-      userId:userId
+      userId,
     });
     const prodId = await Product.findById(product._id);
 
@@ -100,13 +112,12 @@ const deleteProductId = async (req, res) => {
   }
 };
 
-
 const editProductId = async (req, res) => {
   try {
     let file = req?.file;
     let imageUrl;
 
-    if(file) {
+    if (file) {
       const result = await cloudinary.v2.uploader.upload(file.path);
 
       imageUrl = result.secure_url;
@@ -116,39 +127,46 @@ const editProductId = async (req, res) => {
       name,
       price,
       descr,
-      season,
+      size,
+      category,
+      state,
+      /* season,
       fit,
       gender,
       fabric,
       style,
       specifications,
-      avaliable,
+      avaliable, */
       stock,
-      userId
+      userId,
     } = req.body;
     /* const size = JSON.parse(req.body.size); */
     const productId = req.params.id;
     const product = await Product.findById(productId);
-    const imageProd = !file ? product?.image : imageUrl
+    const imageProd = !file ? product?.image : imageUrl;
     const productUpdate = await Product.findByIdAndUpdate(productId, {
       name,
       price,
       descr,
-      season,
+      category,
+      state,
+      /* season,
       fit,
       gender,
       fabric,
       style,
       specifications,
       avaliable,
-      /* size, */
+      size, */
+      size,
       stock,
       image: imageProd,
-      userId:userId
+      userId,
     });
+    const productEdit = await Product.findById(productId);
     res
       .status(201)
-      .json({ message: "Product updated successfully", data: product });
+      .json({ message: "Product updated successfully", data: productEdit });
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Failed to updated product" });
@@ -160,5 +178,5 @@ module.exports = {
   getProducts,
   getProductId,
   deleteProductId,
-  editProductId
+  editProductId,
 };
