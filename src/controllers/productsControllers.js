@@ -33,6 +33,7 @@ const createProduct = async (req, res) => {
       specifications,
       avaliable,
       stock,
+      userId
     } = req.body;
     /* const size = JSON.parse(req.body.size); */
 
@@ -50,6 +51,7 @@ const createProduct = async (req, res) => {
       /* size, */
       stock,
       image: imageUrl,
+      userId:userId
     });
     const prodId = await Product.findById(product._id);
 
@@ -101,15 +103,55 @@ const deleteProductId = async (req, res) => {
 
 const editProductId = async (req, res) => {
   try {
-    const productUpdate = await req.body;
-    const productId = req.params.id;
-    const product = await Product.findByIdAndUpdate(productId, productUpdate);
-    if (!product) {
-      return res.status(404).json({ message: "Product not found" });
+    let file = req?.file;
+    let imageUrl;
+
+    if(file) {
+      const result = await cloudinary.v2.uploader.upload(file.path);
+
+      imageUrl = result.secure_url;
     }
-    res.json({ message: "Product updated successfully", data: productUpdate });
+
+    const {
+      name,
+      price,
+      descr,
+      season,
+      fit,
+      gender,
+      fabric,
+      style,
+      specifications,
+      avaliable,
+      stock,
+      userId
+    } = req.body;
+    /* const size = JSON.parse(req.body.size); */
+    const productId = req.params.id;
+    const product = await Product.findById(productId);
+    const imageProd = !file ? product?.image : imageUrl
+    const productUpdate = await Product.findByIdAndUpdate(productId, {
+      name,
+      price,
+      descr,
+      season,
+      fit,
+      gender,
+      fabric,
+      style,
+      specifications,
+      avaliable,
+      /* size, */
+      stock,
+      image: imageProd,
+      userId:userId
+    });
+    res
+      .status(201)
+      .json({ message: "Product updated successfully", data: product });
   } catch (error) {
-    res.status(500).json({ message: "Failed to retrieve product" });
+    console.error(error);
+    res.status(500).json({ message: "Failed to updated product" });
   }
 };
 

@@ -14,7 +14,7 @@ router.post("/", upload.single("image"), products.createProduct);
 router.get("/", products.getProducts);
 router.get("/:id", products.getProductId);
 router.delete("/:id", products.deleteProductId);
-router.put("/:id", products.editProductId);
+router.put("/:id", upload.single("image"), products.editProductId);
 
 /* router.post('/', upload.single('image'), async (req, res) => {
   const file = req.file;

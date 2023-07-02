@@ -1,5 +1,5 @@
 const { register, login, getUsers, getUserId } = require("./authControllers");
-const { ordersGet, createOrder } = require("./ordersController");
+const { ordersGet, createOrder,createPreference } = require("./ordersController");
 
 const {
   createProduct,
@@ -7,7 +7,7 @@ const {
   getProductId,
   deleteProductId,
   editProductId,
-} = require("./porductsControllers");
+} = require("./productsControllers");
 
 const products = {
   createProduct,
@@ -27,6 +27,7 @@ const auth = {
 const orders = {
   ordersGet,
   createOrder,
+  createPreference
 };
 
 module.exports = {

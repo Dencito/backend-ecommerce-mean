@@ -11,7 +11,7 @@ const register = async (req, res) => {
     });
     res.status(201).json({ message: "User registered successfully", user });
   } catch (error) {
-    res.status(500).json({ message: "Failed to register user" });
+    res.status(500).json({ message: "Failed to register user",error:error.message });
   }
 };
 
@@ -28,9 +28,10 @@ const login = async (req, res) => {
         return res.status(401).json({ message: "Invalid password" });
       }
       const userSucces = await User.findOne({ username });
+    
       res.json({
         message: "Login successful",
-        data: { _id: userSucces._id, username: userSucces.username },
+        data: { _id: userSucces._id, username: userSucces.username,role:userSucces.role },
       });
     } catch (error) {
       res.status(500).json({ message: "Failed to login" });
