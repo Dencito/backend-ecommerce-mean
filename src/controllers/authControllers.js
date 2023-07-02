@@ -1,5 +1,6 @@
 const User = require("../models/User");
 const bcrypt = require("bcrypt");
+
 const register = async (req, res) => {
   try {
     const { username, password, role } = req.body;
@@ -12,6 +13,16 @@ const register = async (req, res) => {
     res.status(201).json({ message: "User registered successfully", user });
   } catch (error) {
     res.status(500).json({ message: "Failed to register user",error:error.message });
+  }
+};
+const updateUser = async (req, res) => {
+  try {
+    const userId = req.params.id;
+    const userUpdate = await User.findByIdAndUpdate(userId, req.body);
+    const userFind = await User.findById(userUpdate._id)
+    res.status(201).json({ message: "User updated successfully", data: userFind });
+  } catch (error) {
+    res.status(500).json({ message: "Failed to updated user",error:error.message });
   }
 };
 
@@ -31,7 +42,7 @@ const login = async (req, res) => {
     
       res.json({
         message: "Login successful",
-        data: { _id: userSucces._id, username: userSucces.username,role:userSucces.role },
+        data: { _id: userSucces._id, username: userSucces.username,role:userSucces.role, desc: user.desc },
       });
     } catch (error) {
       res.status(500).json({ message: "Failed to login" });
@@ -61,7 +72,7 @@ const login = async (req, res) => {
       const user = await User.findOne({ _id: req.params.id });
       res.json({
         message: "user found",
-        data: { _id: user._id, username: user.username, role: user.role, orders: user.orders },
+        data: { _id: user._id, username: user.username, role: user.role, orders: user.orders, desc: user.desc },
       });
     } catch (error) {
       res.status(500).json({ message: "User not found" });
@@ -72,5 +83,6 @@ module.exports = {
   register,
   login,
   getUsers,
-  getUserId
+  getUserId,
+  updateUser
 };

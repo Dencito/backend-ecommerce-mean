@@ -1,4 +1,4 @@
-const { register, login, getUsers, getUserId } = require("./authControllers");
+const { register, login, getUsers, getUserId, updateUser } = require("./authControllers");
 const { ordersGet, createOrder,createPreference } = require("./ordersController");
 
 const {
@@ -22,6 +22,7 @@ const auth = {
   getUsers,
   getUserId,
   register,
+  updateUser
 };
 
 const orders = {

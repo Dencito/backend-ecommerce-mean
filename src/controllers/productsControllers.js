@@ -66,6 +66,18 @@ const createProduct = async (req, res) => {
       userId,
     });
     const prodId = await Product.findById(product._id);
+    const productDetailsPromises = products.map(async (product) => {
+      const user = await User.findById(product.userId);
+    
+      const productDetails = {
+        user,
+        product,
+      };
+
+      console.log(productDetailsPromises)
+    
+      return productDetails;
+    });
 
     res
       .status(201)
