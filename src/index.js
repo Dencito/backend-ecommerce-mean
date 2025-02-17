@@ -12,6 +12,10 @@ const port = process.env.PORT;
 
 app.use(cors())
 
+app.get("/pruebas", (req, res)=> {
+  return {message: "Hola esto es una prueba"}
+})
+
 
 app.use(express.json());
 app.use('/api/auth', authRoutes);
