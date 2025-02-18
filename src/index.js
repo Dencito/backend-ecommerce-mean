@@ -1,8 +1,8 @@
 const express = require('express');
 const cors = require("cors")
-const authRoutes = require('./routes/auth');
-const productRoutes = require('./routes/products');
-const orderRoutes = require('./routes/orders');
+//const authRoutes = require('./routes/auth');
+//const productRoutes = require('./routes/products');
+//const orderRoutes = require('./routes/orders');
 //const { db } = require('./utils/db');
 
 
