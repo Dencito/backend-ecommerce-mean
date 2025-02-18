@@ -12,9 +12,9 @@ const port = process.env.PORT;
 
 app.use(cors())
 
-app.get("/pruebas", (req, res)=> {
-  return {message: "Hola esto es una prueba"}
-})
+app.get("/pruebas", (req, res) => {
+  res.json({ message: "Hola esto es una prueba" });
+});
 
 
 app.use(express.json());
